@@ -1,9 +1,14 @@
 <template>
-  <div class="tracker">
-    <span class="tracker_label">{{ tracker.label }}</span><br>
-    <div v-if="tracker.status">Статус: <span v-bind:class="statusColor">{{ stat_ru }}</span> <time-counter :changedAtTime="tracker.status.changed_at"></time-counter></div>
-    <div v-if="tracker.zone && tracker.zone.label">Зона: {{ tracker.zone.label }} <time-counter :changedAtTime="tracker.zone.changed_at"></time-counter></div>
-  </div>
+  <tr class="tracker">
+    <td class="tracker_label">{{ tracker.label }}</td>
+    <td class="tracker_status" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span><br><time-counter :changedAtTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
+    <td v-if="tracker.zone && tracker.zone.label">{{ tracker.zone.label }}<br><time-counter :changedAtTime="tracker.zone.changed_at"></time-counter></td><td v-else>-</td>
+  </tr>
+  <!--<div class="tracker">-->
+    <!--<span class="tracker_label">{{ tracker.label }}</span>-->
+    <!--<div v-if="tracker.zone && tracker.zone.label">Зона: {{ tracker.zone.label }} <time-counter :changedAtTime="tracker.zone.changed_at"></time-counter></div><div v-else>Зона: -</div>-->
+    <!--<div class="tracker_status" v-if="tracker.status">Статус: <span v-bind:class="statusColor">{{ stat_ru }}</span> <time-counter :changedAtTime="tracker.status.changed_at"></time-counter></div><div v-else>Статус: -</div>-->
+  <!--</div>-->
 </template>
 
 <script>
@@ -26,7 +31,7 @@ export default {
       switch (_st) {
         case 'moving': return 'движется'
         case 'stopped': return 'стоит'
-        case 'parked': return 'запаркован'
+        case 'parked': return 'стоит'
         default: return 'не ясно'
       }
     },
@@ -40,23 +45,26 @@ export default {
 </script>
 
 <style scoped>
-  div.tracker {
+  td {
+    padding: 5px 10px;
+  }
+  .tracker {
     color: #aaa;
     background-color: rgba(50, 50, 50, 0.5);
-    margin-bottom: 10px;
-    padding: 10px;
   }
-  span.tracker_label {
-    font-weight: bold;
+  .tracker_label {
+    color: #ccc;
+    /*font-weight: bold;*/
+    margin: 0;
   }
   span.parked {
-      color: white;
+      color: indianred;
   }
   span.moving {
-      color: darkgreen;
+    color: darkgreen;
   }
   span.stopped {
-      color: darkred;
+    color: indianred;
   }
 
 </style>

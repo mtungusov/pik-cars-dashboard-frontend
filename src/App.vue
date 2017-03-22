@@ -1,6 +1,13 @@
 <template>
   <div id="app">
-    <tracker v-for="tracker in trackers" :key="tracker.id" :tracker="tracker"></tracker>
+    <table>
+      <tr>
+        <th>Автомобиль</th>
+        <th>Статус</th>
+        <th>Зона</th>
+      </tr>
+      <tracker v-for="tracker in trackers" :key="tracker.id" :tracker="tracker"></tracker>
+    </table>
   </div>
 </template>
 
@@ -48,14 +55,34 @@ export default {
 </script>
 
 <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
   body {
     background-color: black;
+    display: block;
+    margin: 0 auto;
   }
   #app {
     font-family: Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
-    margin-top: 20px;
+    width: 760px;
+    margin: 0 auto;
+    /*margin-top: 20px;*/
+    /*margin: 10px auto;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*border: 1px solid red;*/
   }
+  th {
+    color: white;
+    font-weight: bold;
+    height: 3em;
+    background-color: #333;
+  }
+
 </style>

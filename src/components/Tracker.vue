@@ -26,7 +26,7 @@ export default {
       switch (_st) {
         case 'moving': return 'движется'
         case 'stopped': return 'стоит'
-        case 'parked': return 'на парковке'
+        case 'parked': return 'запаркован'
         default: return 'не ясно'
       }
     },

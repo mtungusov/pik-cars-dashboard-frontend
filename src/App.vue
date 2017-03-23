@@ -4,52 +4,33 @@
       <tr>
         <th>Автомобиль</th>
         <th>Статус</th>
-        <th>Зона</th>
+        <th>Геозона</th>
       </tr>
-      <tracker v-for="tracker in trackers" :key="tracker.id" :tracker="tracker"></tracker>
+      <!--<tr v-for="tracker in trackers">-->
+        <!--<td colspan="3">{{ tracker.label }}</td>-->
+      <!--</tr>-->
+      <tracker v-for="tracker in trackers()" :key="tracker.id" :tracker="tracker"></tracker>
     </table>
   </div>
 </template>
 
 <script>
-import API from './api/api'
+import store from './store'
 import Tracker from './components/Tracker'
 
+const UPDATE_INTERVAL = 30
 export default {
   name: 'app',
   components: { Tracker },
-  data: () => {
-    return {
-      trackers: [
-        {
-          id: 1,
-          label: 'Тягач №1',
-          status_label: 'moving',
-          zone_label: 'ОЗЖБК'
-        },
-        {
-          id: 2,
-          label: 'Тягач №2',
-          status_label: 'stopped',
-          zone_label: 'ОЗЖБК'
-        },
-        {
-          id: 3,
-          label: 'Тягач №3',
-          status_label: '',
-          zone_label: ''
-        },
-        {
-          id: 3,
-          label: 'Тягач №4',
-          status_label: 'parked',
-          zone_label: ''
-        }
-      ]
+  store,
+  methods: {
+    trackers: function () {
+      return this.$store.state.trackers
     }
   },
   mounted() {
-    API.getTrackers().then(response => this.trackers = response.data)
+    this.$store.dispatch('refresh')
+    setInterval(() => { this.$store.dispatch('refresh') }, UPDATE_INTERVAL*1000)
   }
 }
 </script>
@@ -70,7 +51,7 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
-    width: 760px;
+    width: 860px;
     margin: 0 auto;
     /*margin-top: 20px;*/
     /*margin: 10px auto;*/

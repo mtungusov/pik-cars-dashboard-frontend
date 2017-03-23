@@ -2,7 +2,7 @@
   <tr class="tracker">
     <td class="tracker_label">{{ tracker.label }}</td>
     <td class="tracker_status" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span><br><time-counter :changedAtTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
-    <td v-if="tracker.zone && tracker.zone.label">{{ tracker.zone.label }}<br><time-counter :changedAtTime="tracker.zone.changed_at"></time-counter></td><td v-else>-</td>
+    <td v-if="tracker.zone && tracker.zone.label">{{ tracker.zone.label }}<br><time-counter :changedAtTime="tracker.zone.changed_at"></time-counter><br><span class="inzonedate">Въезд: {{ showDate }}</span></td><td v-else>-</td>
   </tr>
   <!--<div class="tracker">-->
     <!--<span class="tracker_label">{{ tracker.label }}</span>-->
@@ -35,6 +35,16 @@ export default {
         default: return 'не ясно'
       }
     },
+    showDate: function () {
+      let pad = (i) => { return ("0" + i).substr(-2) }
+      var date = new Date(this.tracker.zone.changed_at * 1000)
+      var y = date.getFullYear()
+      var m = pad(date.getMonth())
+      var d =pad(date.getDay())
+      var h = pad(date.getHours())
+      var minutes = pad(date.getMinutes())
+      return y + '-' + m + '-' + d + ' ' + h + ':' + minutes
+    }
   },
   methods: {
     now: function () {
@@ -58,13 +68,16 @@ export default {
     margin: 0;
   }
   span.parked {
-      color: indianred;
+      color: darkred;
   }
   span.moving {
     color: darkgreen;
   }
   span.stopped {
     color: indianred;
+  }
+  span.inzonedate {
+    color: aqua;
   }
 
 </style>

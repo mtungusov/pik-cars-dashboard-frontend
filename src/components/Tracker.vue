@@ -1,7 +1,7 @@
 <template>
   <tr class="tracker">
     <td class="tracker_label">{{ tracker.label }}</td>
-    <td class="tracker_status" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span><br><time-counter :fromTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
+    <td class="tracker_status" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span><br><time-counter v-if="tracker.status.connection === 'active'" :fromTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
     <td class="tracker_zone" v-if="tracker.zone && tracker.zone.label">{{ tracker.zone.label }}<br><time-counter-color :fromTime="tracker.zone.changed_at"></time-counter-color><br><span class="inzonedate">Въезд: {{ showDate }}</span></td><td v-else>-</td>
   </tr>
 </template>
@@ -9,6 +9,7 @@
 <script>
 import TimeCounter from './TimeCounter'
 import TimeCounterColor from './TimeCounterColor'
+
 export default {
   name: 'tracker',
   components: { TimeCounter, TimeCounterColor },
@@ -16,19 +17,33 @@ export default {
   computed: {
     statusColor: function() {
       if (this.tracker.status)
-        return this.tracker.status.label
+        if (this.tracker.status.connection === 'active') {
+          return this.tracker.status.label
+        } else {
+          return this.tracker.status.connection
+        }
       else
         return 'unknown'
     },
     stat_ru: function() {
       if (!this.tracker.status)
         return 'не ясно'
+      var _conn = this.tracker.status.connection
       var _st = this.tracker.status.label
-      switch (_st) {
-        case 'moving': return 'движется'
-        case 'stopped': return 'стоит'
-        case 'parked': return 'стоит'
-        default: return 'не ясно'
+      if (_conn === 'active') {
+        switch (_st) {
+          case 'moving': return 'движется'
+          case 'stopped': return 'стоит'
+          case 'parked': return 'стоит'
+          default: return 'не ясно'
+        }
+      }
+      else {
+        switch (_conn) {
+          case 'offline': return 'выключен'
+          case 'signal_lost': return 'нет сигнала'
+          default: return 'не ясно'
+        }
       }
     },
     showDate: function () {
@@ -50,7 +65,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   td {
     padding: 5px 10px;
   }
@@ -63,17 +78,22 @@ export default {
     /*font-weight: bold;*/
     margin: 0;
   }
-  span.parked {
-      color: darkred;
-  }
-  span.moving {
-    color: darkgreen;
-  }
-  span.stopped {
-    color: indianred;
-  }
-  span.inzonedate {
-    color: aqua;
+  span {
+    &.offline, &.signal_lost {
+      color: yellow;
+    }
+    &.parked {
+        color: darkred;
+    }
+    &.moving {
+      color: darkgreen;
+    }
+    &.stopped {
+      color: indianred;
+    }
+    &.inzonedate {
+      color: aqua;
+    }
   }
 
 </style>

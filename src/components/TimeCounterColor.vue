@@ -1,16 +1,27 @@
 <template>
-  <span>{{ toString() }}</span>
+  <span v-bind:class="statusColor">{{ toString() }}</span>
 </template>
 
 <script>
   const UPDATE_INTERVAL = 10
-
+  
   export default {
-    name: 'time-counter',
+    name: 'time-counter-color',
     props: ['fromTime'],
     data() {
       return {
         now: Math.trunc(Date.now() / 1000)
+      }
+    },
+    computed: {
+      statusColor: function () {
+        let _time = this.fromTime
+        let timeDiff = (this.now - _time)/60
+        switch (true) {
+          case (timeDiff > 60): return 'gt60'
+          case (timeDiff > 40): return 'gt40'
+          default: return ''
+        }
       }
     },
     methods: {
@@ -32,4 +43,16 @@
 </script>
 
 <style lang="scss" scoped>
+  span {
+    color: white;
+    
+    &.gt40 {
+      color: black;
+      background-color: yellow;
+    }
+    &.gt60 {
+      color: white;
+      background-color: darkred;
+    }
+  }
 </style>

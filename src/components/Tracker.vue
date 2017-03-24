@@ -1,21 +1,17 @@
 <template>
   <tr class="tracker">
     <td class="tracker_label">{{ tracker.label }}</td>
-    <td class="tracker_status" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span><br><time-counter :changedAtTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
-    <td v-if="tracker.zone && tracker.zone.label">{{ tracker.zone.label }}<br><time-counter :changedAtTime="tracker.zone.changed_at"></time-counter><br><span class="inzonedate">Въезд: {{ showDate }}</span></td><td v-else>-</td>
+    <td class="tracker_status" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span><br><time-counter :fromTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
+    <td class="tracker_zone" v-if="tracker.zone && tracker.zone.label">{{ tracker.zone.label }}<br><time-counter-color :fromTime="tracker.zone.changed_at"></time-counter-color><br><span class="inzonedate">Въезд: {{ showDate }}</span></td><td v-else>-</td>
   </tr>
-  <!--<div class="tracker">-->
-    <!--<span class="tracker_label">{{ tracker.label }}</span>-->
-    <!--<div v-if="tracker.zone && tracker.zone.label">Зона: {{ tracker.zone.label }} <time-counter :changedAtTime="tracker.zone.changed_at"></time-counter></div><div v-else>Зона: -</div>-->
-    <!--<div class="tracker_status" v-if="tracker.status">Статус: <span v-bind:class="statusColor">{{ stat_ru }}</span> <time-counter :changedAtTime="tracker.status.changed_at"></time-counter></div><div v-else>Статус: -</div>-->
-  <!--</div>-->
 </template>
 
 <script>
 import TimeCounter from './TimeCounter'
+import TimeCounterColor from './TimeCounterColor'
 export default {
   name: 'tracker',
-  components: { TimeCounter },
+  components: { TimeCounter, TimeCounterColor },
   props: ['tracker'],
   computed: {
     statusColor: function() {
@@ -39,8 +35,8 @@ export default {
       let pad = (i) => { return ("0" + i).substr(-2) }
       var date = new Date(this.tracker.zone.changed_at * 1000)
       var y = date.getFullYear()
-      var m = pad(date.getMonth())
-      var d =pad(date.getDay())
+      var m = pad(date.getMonth() + 1)
+      var d =pad(date.getDate())
       var h = pad(date.getHours())
       var minutes = pad(date.getMinutes())
       return y + '-' + m + '-' + d + ' ' + h + ':' + minutes

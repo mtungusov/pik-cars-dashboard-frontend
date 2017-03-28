@@ -77,6 +77,7 @@ export default {
     color: #ccc;
     /*font-weight: bold;*/
     margin: 0;
+    min-width: 516px;
   }
   span {
     &.offline, &.signal_lost {

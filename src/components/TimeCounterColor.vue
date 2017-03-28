@@ -1,5 +1,5 @@
 <template>
-  <span v-bind:class="statusColor">{{ toString() }}</span>
+  <span>Время нахождения внутри: <span v-bind:class="statusColor">{{ toString() }}</span></span>
 </template>
 
 <script>

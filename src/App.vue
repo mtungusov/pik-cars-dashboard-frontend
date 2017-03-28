@@ -67,6 +67,7 @@ export default {
         return acc
       }, [])
       this.zones = _.sortBy(_.uniqWith(_zones, _.isEqual), ['label'])
+      this.zones.push({ 'id': 0, 'label': 'Вне зон' })
       this.zoneSelector = true
     }
   },

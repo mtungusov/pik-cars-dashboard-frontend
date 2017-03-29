@@ -6,7 +6,7 @@
     </div>
 
     <ul class="zones" v-if="zoneSelector">
-      <li v-for="zone in zones"><input type="checkbox" :id="'zone'+zone.id" :value="zone.id" v-model="filteredZoneIds"><label :for="'zone'+zone.id">{{ zone.label }}</label></li>
+      <li v-for="zone in zones()"><input type="checkbox" :id="'zone'+zone.id" :value="zone.id" v-model="filteredZoneIds"><label :for="'zone'+zone.id">{{ zone.label }}</label></li>
     </ul>
     
     <div class="selectedZones"><span v-for="zoneLabel in filteredZoneLabels">{{ zoneLabel }}</span></div>
@@ -37,14 +37,15 @@ export default {
   data: function() {
     return {
       filteredZoneIds: [],
-      zones: [],
+//      zones: [],
       zoneSelector: false
     }
   },
   store,
   computed: {
     filteredZoneLabels: function () {
-      var result = _.map(_.filter(this.zones, o => { return _.includes(this.filteredZoneIds, o.id) }), (zone)=>{ return zone.label })
+      var _zones = this.$store.state.zones
+      var result = _.map(_.filter(_zones, o => { return _.includes(this.filteredZoneIds, o.id) }), (zone)=>{ return zone.label })
       return _.join(result, ', ')
     }
   },
@@ -56,18 +57,25 @@ export default {
       else
         return this.$store.state.trackers
     },
+    zones: function () {
+      return this.$store.state.zones
+    },
+//    loadZones: function () {
+//      var _trackers = this.$store.state.trackers
+//      var _filteredIds = this.filteredZoneIds
+//      var _zones = _.reduce(_trackers, function (acc, item) {
+//        if (item.zone && item.zone.id > 0)
+////          var _selected = _.includes(_filteredIds, item.zone.id)
+////          acc.push({ 'id': item.zone.id, 'label': item.zone.label, 'selected': _selected })
+//          acc.push({ 'id': item.zone.id, 'label': item.zone.label })
+//        return acc
+//      }, [])
+//      this.zones = _.sortBy(_.uniqWith(_zones, _.isEqual), ['label'])
+//      this.zones.push({ 'id': 0, 'label': 'ВНЕ ЗОН' })
+//      this.zoneSelector = true
+//    },
     loadZones: function () {
-      var _trackers = this.$store.state.trackers
-      var _filteredIds = this.filteredZoneIds
-      var _zones = _.reduce(_trackers, function (acc, item) {
-        if (item.zone && item.zone.id > 0)
-//          var _selected = _.includes(_filteredIds, item.zone.id)
-//          acc.push({ 'id': item.zone.id, 'label': item.zone.label, 'selected': _selected })
-          acc.push({ 'id': item.zone.id, 'label': item.zone.label })
-        return acc
-      }, [])
-      this.zones = _.sortBy(_.uniqWith(_zones, _.isEqual), ['label'])
-      this.zones.push({ 'id': 0, 'label': 'Вне зон' })
+      this.$store.dispatch('refresh_zones')
       this.zoneSelector = true
     }
   },

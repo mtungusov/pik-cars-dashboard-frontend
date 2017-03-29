@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <div>
+    <div class="zone_buttons">
       <button v-if="!zoneSelector" @click="loadZones()">Выбрать геозоны</button>
-      <button v-else @click="zoneSelector = false">Закрыть</button>
+      <button v-else @click="saveZonesIds()">Закрыть</button>
+    
+      <ul class="zones" v-if="zoneSelector">
+        <li v-for="zone in zones()"><input type="checkbox" :id="'zone'+zone.id" :value="zone.id" v-model="filteredZoneIds"><label :for="'zone'+zone.id">{{ zone.label }}</label></li>
+      </ul>
+    
+      <div class="selectedZones"><span v-for="zoneLabel in filteredZoneLabels">{{ zoneLabel }}</span></div>
     </div>
-
-    <ul class="zones" v-if="zoneSelector">
-      <li v-for="zone in zones()"><input type="checkbox" :id="'zone'+zone.id" :value="zone.id" v-model="filteredZoneIds"><label :for="'zone'+zone.id">{{ zone.label }}</label></li>
-    </ul>
     
-    <div class="selectedZones"><span v-for="zoneLabel in filteredZoneLabels">{{ zoneLabel }}</span></div>
-    
-    <table>
+    <table class="tracker_info">
       <tr>
         <th>Автомобиль</th>
         <th>Статус</th>
@@ -51,11 +51,18 @@ export default {
   },
   methods: {
     trackers: function () {
-      if (_.size(this.filteredZoneIds) > 0) {
-        return _.filter(this.$store.state.trackers, o => { return _.includes(this.filteredZoneIds, o.zone.id) })
+      var _trackers = this.$store.state.trackers
+      var _filteredZoneIds = this.filteredZoneIds
+      if (_.size(_filteredZoneIds) > 0) {
+        let my_filter = (list, obj) => {
+          if (obj.zone) {
+            return _.includes(list, obj.zone.id)
+          }
+        }
+        return _.filter(_trackers, function(o) { return my_filter(_filteredZoneIds, o) })
       }
       else
-        return this.$store.state.trackers
+        return _trackers
     },
     zones: function () {
       return this.$store.state.zones
@@ -77,10 +84,17 @@ export default {
     loadZones: function () {
       this.$store.dispatch('refresh_zones')
       this.zoneSelector = true
+    },
+    saveZonesIds: function () {
+      localStorage.setItem('filteredZoneIds', JSON.stringify(this.filteredZoneIds))
+      this.zoneSelector = false
     }
   },
   mounted() {
+    this.$store.dispatch('refresh_zones')
     this.$store.dispatch('refresh')
+    var _filteredZoneIds = localStorage.getItem('filteredZoneIds')
+    if (_filteredZoneIds) { this.filteredZoneIds = JSON.parse(_filteredZoneIds) }
     setInterval(() => { this.$store.dispatch('refresh') }, UPDATE_INTERVAL*1000)
   }
 }
@@ -110,13 +124,6 @@ export default {
     /*flex-direction: column;*/
     /*border: 1px solid red;*/
   }
-  th {
-    color: white;
-    font-weight: bold;
-    height: 3em;
-    background-color: #333;
-  }
-  
   button {
     background-color: #333333;
     border: none;
@@ -146,6 +153,24 @@ export default {
     font-size: 12px;
     font-style: italic;
     margin: 10px 0;
+  }
+  
+  .tracker_info {
+    margin: 0;
+    padding: 0;
+    border: none;
+    
+    th {
+      color: white;
+      font-weight: bold;
+      height: 3em;
+      background-color: #333;
+    }
+  
+  }
+  
+  .zone_buttons {
+    margin: 5px 2px;
   }
 
 </style>

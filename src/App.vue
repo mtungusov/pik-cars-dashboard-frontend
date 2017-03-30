@@ -31,9 +31,9 @@
     
     <table class="tracker_info">
       <tr>
-        <th>Автомобиль</th>
-        <th>Статус</th>
-        <th>Геозона</th>
+        <th class="tracker_label">Автомобиль</th>
+        <th class="tracker_status">Статус</th>
+        <th class="tracker_zone">Геозона</th>
       </tr>
       <tracker v-for="tracker in trackers()" :key="tracker.id" :tracker="tracker"></tracker>
     </table>
@@ -74,16 +74,32 @@ export default {
     trackers: function () {
       var _trackers = this.$store.state.trackers
       var _filteredZoneIds = this.filteredZoneIds
-      if (_.size(_filteredZoneIds) > 0) {
-        let my_filter = (list, obj) => {
-          if (obj.zone) {
-            return _.includes(list, obj.zone.id)
-          }
-        }
-        return _.filter(_trackers, function(o) { return my_filter(_filteredZoneIds, o) })
-      }
-      else
+      var _filteredGroupIds = this.filteredGroupIds
+      if (_.size(_filteredZoneIds) == 0 && _.size(_filteredGroupIds) == 0) {
         return _trackers
+      }
+      let filter_by_zones = (list, obj) => {
+        if (obj.zone) {
+          return _.includes(list, obj.zone.id)
+        }
+      }
+      let filter_by_groups = (list, obj) => {
+        if (obj.group) {
+          return _.includes(list, obj.group.id)
+        }
+      }
+      if (_.size(_filteredZoneIds) > 0) {
+        var _result = _.filter(_trackers, function(o) { return filter_by_zones(_filteredZoneIds, o) })
+        if (_.size(_filteredGroupIds) > 0) {
+          return _.filter(_result, function(o) { return filter_by_groups(_filteredGroupIds, o) })
+        }
+        else {
+          return _result
+        }
+      }
+      else {
+        return _.filter(_trackers, function(o) { return filter_by_groups(_filteredGroupIds, o) })
+      }
     },
     zones: function () {
       return this.$store.state.zones
@@ -151,11 +167,6 @@ export default {
     color: #2c3e50;
     width: 860px;
     margin: 0 auto;
-    /*margin-top: 20px;*/
-    /*margin: 10px auto;*/
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*border: 1px solid red;*/
   }
   
   table.filter_buttons {
@@ -209,12 +220,23 @@ export default {
     margin: 0;
     padding: 0;
     border: none;
+    width: 100%;
     
     th {
       color: white;
       font-weight: bold;
       height: 3em;
       background-color: #333;
+      
+      &.tracker_label {
+        min-width: 534px;
+      }
+      &.tracker_status {
+        min-width: 137px;
+      }
+      &.tracker_zone {
+        min-width: 177px;
+      }
     }
   
   }

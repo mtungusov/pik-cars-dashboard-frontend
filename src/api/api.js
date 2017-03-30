@@ -8,5 +8,6 @@ export default {
 
   getZones: function() {
     return axios.get('http://dashboard-cars.dsk2.picompany.ru/api/v1/zones')
+    // return axios.get('http://localhost:3000/api/v1/zones')
   }
 }

@@ -1,15 +1,33 @@
 <template>
   <div id="app">
-    <div class="zone_buttons">
-      <button v-if="!zoneSelector" @click="loadZones()">Выбрать геозоны</button>
-      <button v-else @click="saveZonesIds()">Закрыть</button>
+    <table class="filter_buttons">
+      <tr>
+        <td>
+          <div class="zone_buttons">
+            <button v-if="!zoneSelector" @click="loadZones()">Выбрать геозоны</button>
+            <button v-else @click="saveZonesIds()">Закрыть</button>
     
-      <ul class="zones" v-if="zoneSelector">
-        <li v-for="zone in zones()"><input type="checkbox" :id="'zone'+zone.id" :value="zone.id" v-model="filteredZoneIds"><label :for="'zone'+zone.id">{{ zone.label }}</label></li>
-      </ul>
+            <ul class="zones" v-if="zoneSelector">
+              <li v-for="zone in zones()"><input type="checkbox" :id="'zone'+zone.id" :value="zone.id" v-model="filteredZoneIds"><label :for="'zone'+zone.id">{{ zone.label }}</label></li>
+            </ul>
     
-      <div class="selectedZones"><span v-for="zoneLabel in filteredZoneLabels">{{ zoneLabel }}</span></div>
-    </div>
+            <div class="selectedZones"><span v-for="zoneLabel in filteredZoneLabels">{{ zoneLabel }}</span></div>
+          </div>
+        </td>
+        <td>
+          <div class="group_buttons">
+            <button v-if="!groupSelector" @click="loadGroups()">Выбрать группы транспорта</button>
+            <button v-else @click="saveGroupsIds()">Закрыть</button>
+  
+            <ul class="groups" v-if="groupSelector">
+              <li v-for="group in groups()"><input type="checkbox" :id="'group'+group.id" :value="group.id" v-model="filteredGroupIds"><label :for="'group'+group.id">{{ group.title }}</label></li>
+            </ul>
+  
+            <div class="selectedGroups"><span v-for="groupTitle in filteredGroupLabels">{{ groupTitle }}</span></div>
+          </div>
+        </td>
+      </tr>
+    </table>
     
     <table class="tracker_info">
       <tr>
@@ -17,9 +35,6 @@
         <th>Статус</th>
         <th>Геозона</th>
       </tr>
-      <!--<tr v-for="tracker in trackers">-->
-        <!--<td colspan="3">{{ tracker.label }}</td>-->
-      <!--</tr>-->
       <tracker v-for="tracker in trackers()" :key="tracker.id" :tracker="tracker"></tracker>
     </table>
   </div>
@@ -37,8 +52,9 @@ export default {
   data: function() {
     return {
       filteredZoneIds: [],
-//      zones: [],
-      zoneSelector: false
+      zoneSelector: false,
+      groupSelector: false,
+      filteredGroupIds: []
     }
   },
   store,
@@ -46,6 +62,11 @@ export default {
     filteredZoneLabels: function () {
       var _zones = this.$store.state.zones
       var result = _.map(_.filter(_zones, o => { return _.includes(this.filteredZoneIds, o.id) }), (zone)=>{ return zone.label })
+      return _.join(result, ', ')
+    },
+    filteredGroupLabels: function () {
+      var _groups = this.$store.state.groups
+      var result = _.map(_.filter(_groups, o => { return _.includes(this.filteredGroupIds, o.id) }), (group)=>{ return group.title })
       return _.join(result, ', ')
     }
   },
@@ -66,6 +87,9 @@ export default {
     },
     zones: function () {
       return this.$store.state.zones
+    },
+    groups: function () {
+      return this.$store.state.groups
     },
 //    loadZones: function () {
 //      var _trackers = this.$store.state.trackers
@@ -88,13 +112,22 @@ export default {
     saveZonesIds: function () {
       localStorage.setItem('filteredZoneIds', JSON.stringify(this.filteredZoneIds))
       this.zoneSelector = false
+    },
+    loadGroups: function () {
+      this.groupSelector = true
+    },
+    saveGroupsIds: function () {
+      localStorage.setItem('filteredGroupIds', JSON.stringify(this.filteredGroupIds))
+      this.groupSelector = false
     }
   },
   mounted() {
-    this.$store.dispatch('refresh_zones')
     this.$store.dispatch('refresh')
+    this.$store.dispatch('refresh_zones')
     var _filteredZoneIds = localStorage.getItem('filteredZoneIds')
     if (_filteredZoneIds) { this.filteredZoneIds = JSON.parse(_filteredZoneIds) }
+    var _filteredGroupIds = localStorage.getItem('filteredGroupIds')
+    if (_filteredGroupIds) { this.filteredGroupIds = JSON.parse(_filteredGroupIds) }
     setInterval(() => { this.$store.dispatch('refresh') }, UPDATE_INTERVAL*1000)
   }
 }
@@ -124,20 +157,37 @@ export default {
     /*flex-direction: column;*/
     /*border: 1px solid red;*/
   }
-  button {
-    background-color: #333333;
-    border: none;
-    color: white;
-    display: inline-block;
-    font-size: 16px;
-    padding: 5px 10px;
+  
+  table.filter_buttons {
+    width: 100%;
+    vertical-align: text-top;
     
-    &:focus {
-      outline: none;
+    td {
+      width: 50%;
+      /*text-align: center;*/
+      vertical-align: top;
+      background-color: black;
+      padding: 5px 10px 5px 0;
+      
+      button {
+        background-color: #333333;
+        border: none;
+        color: white;
+        display: inline-block;
+        font-size: 16px;
+        padding: 5px 10px;
+        width: 70%;
+    
+        &:focus {
+          outline: none;
+        }
+      }
     }
   }
   
-  ul.zones {
+  
+  
+  ul.zones, ul.groups {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -148,14 +198,14 @@ export default {
     }
   }
   
-  .selectedZones {
+  .selectedZones, .selectedGroups {
     color: #cccccc;
     font-size: 12px;
     font-style: italic;
     margin: 10px 0;
   }
-  
-  .tracker_info {
+
+  table.tracker_info {
     margin: 0;
     padding: 0;
     border: none;
@@ -169,8 +219,4 @@ export default {
   
   }
   
-  .zone_buttons {
-    margin: 5px 2px;
-  }
-
 </style>

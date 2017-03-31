@@ -1,8 +1,10 @@
 <template>
   <tr class="tracker">
     <td class="tracker_label">{{ tracker.label }}</td>
-    <td class="tracker_status" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span><br><time-counter v-if="tracker.status.connection === 'active'" :fromTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
-    <td class="tracker_zone" v-if="tracker.zone && tracker.zone.label">{{ tracker.zone.label }}<br><time-counter-color :fromTime="tracker.zone.changed_at"></time-counter-color><br><span class="inzonedate">Въезд: {{ showDate }}</span></td><td v-else>-</td>
+    <td class="tracker_" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span></td><td v-else>-</td><td class="tracker_" v-if="tracker.status"><time-counter v-if="tracker.status.connection === 'active'" :fromTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
+    <td class="tracker_" v-if="tracker.zone && tracker.zone.label">{{ tracker.zone.label }}</td><td v-else>-</td>
+    <td class="tracker_" v-if="tracker.zone && tracker.zone.label"><time-counter-color :fromTime="tracker.zone.changed_at"></time-counter-color></td><td v-else>-</td>
+    <td class="tracker_" v-if="tracker.zone && tracker.zone.label"><span class="inzonedate">{{ showDate }}</span></td><td v-else>-</td>
   </tr>
 </template>
 
@@ -32,7 +34,7 @@ export default {
       var _st = this.tracker.status.label
       if (_conn === 'active') {
         switch (_st) {
-          case 'moving': return 'движется'
+          case 'moving': return 'движ.'
           case 'stopped': return 'стоит'
           case 'parked': return 'стоит'
           default: return 'не ясно'
@@ -40,7 +42,7 @@ export default {
       }
       else {
         switch (_conn) {
-          case 'offline': return 'выключен'
+          case 'offline': return 'выкл.'
           case 'signal_lost': return 'нет сигнала'
           default: return 'не ясно'
         }
@@ -49,12 +51,13 @@ export default {
     showDate: function () {
       let pad = (i) => { return ("0" + i).substr(-2) }
       var date = new Date(this.tracker.zone.changed_at * 1000)
-      var y = date.getFullYear()
+      var y = pad(date.getFullYear())
       var m = pad(date.getMonth() + 1)
       var d =pad(date.getDate())
       var h = pad(date.getHours())
       var minutes = pad(date.getMinutes())
-      return y + '-' + m + '-' + d + ' ' + h + ':' + minutes
+//      return y + '-' + m + '-' + d + ' ' + h + ':' + minutes
+      return d + '.' + m + '.' + y +  ' ' + h + ':' + minutes
     }
   },
   methods: {
@@ -75,9 +78,7 @@ export default {
   }
   .tracker_label {
     color: #ccc;
-    /*font-weight: bold;*/
     margin: 0;
-    min-width: 516px;
   }
   span {
     &.offline, &.signal_lost {

@@ -32,8 +32,11 @@
     <table class="tracker_info">
       <tr>
         <th class="tracker_label">Автомобиль</th>
-        <th class="tracker_status">Статус</th>
-        <th class="tracker_zone">Геозона</th>
+        <th class="tracker_">Статус</th>
+        <th class="tracker_">Интервал</th>
+        <th class="tracker_">Геозона</th>
+        <th class="tracker_">Время в зоне</th>
+        <th class="tracker_">Въезд</th>
       </tr>
       <tracker v-for="tracker in trackers()" :key="tracker.id" :tracker="tracker"></tracker>
     </table>
@@ -165,7 +168,7 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
-    width: 860px;
+    width: 940px;
     margin: 0 auto;
   }
   
@@ -229,13 +232,7 @@ export default {
       background-color: #333;
       
       &.tracker_label {
-        min-width: 534px;
-      }
-      &.tracker_status {
-        min-width: 137px;
-      }
-      &.tracker_zone {
-        min-width: 177px;
+        /*min-width: 534px;*/
       }
     }
   

@@ -20,9 +20,9 @@
         let timeDiff = this.now - _time
         let days = Math.floor(timeDiff/(3600*24))
         let hours = Math.floor((timeDiff % (3600*24))/3600)
-        let minutes = pad(Math.floor(((timeDiff % (3600*24))%3600)/60)) + 'мин.'
-        let result = hours > 0 ? pad(hours) + 'ч:' + minutes : minutes
-        return days > 0 ? pad(days) + 'д.:' + result : result
+        let minutes = pad(Math.floor(((timeDiff % (3600*24))%3600)/60))
+        let result = hours > 0 ? pad(hours) + ':' + minutes : '00:' + minutes
+        return days > 0 ? pad(days) + 'д.' + result : result
       }
     },
     mounted() {

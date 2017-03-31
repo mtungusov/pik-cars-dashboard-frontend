@@ -30,7 +30,7 @@ const store = new Vuex.Store({
     },
     UPDATE_ZONES(state, zones) {
       state.zones = zones
-      state.zones.push({ 'id': 0, 'label': 'ВНЕ ЗОН' })
+      state.zones.push({ 'id': 0, 'label': 'В пути' })
     },
     UPDATE_GROUPS(state, groups) {
       state.groups = groups

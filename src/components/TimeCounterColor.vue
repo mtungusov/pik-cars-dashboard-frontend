@@ -44,7 +44,7 @@
 
 <style lang="scss" scoped>
   span {
-    color: white;
+    color: black;
     
     &.gt40 {
       color: black;

@@ -83,8 +83,12 @@ export default {
       }
       let filter_by_zones = (list, obj) => {
         if (obj.zone && obj.zone.event_type == 'inzone') {
-          return _.includes(list, obj.zone.id)
+          var _result1 = _.includes(list, obj.zone.id)
         }
+        if (obj.zone && _.includes(list, 0)) {
+          var _result2 = obj.zone.id == 0 || obj.zone.event_type =='outzone'
+        }
+        return _result1 || _result2
       }
       let filter_by_groups = (list, obj) => {
         if (obj.group) {

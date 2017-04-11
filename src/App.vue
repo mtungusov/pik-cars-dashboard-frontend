@@ -82,7 +82,7 @@ export default {
         return _trackers
       }
       let filter_by_zones = (list, obj) => {
-        if (obj.zone) {
+        if (obj.zone && obj.zone.event_type == 'inzone') {
           return _.includes(list, obj.zone.id)
         }
       }

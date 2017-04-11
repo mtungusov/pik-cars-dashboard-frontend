@@ -1,10 +1,10 @@
 <template>
   <tr class="tracker">
     <td class="tracker_label">{{ tracker.label }}</td>
-    <td class="tracker_" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span></td><td v-else>-</td><td class="tracker_" v-if="tracker.status"><time-counter v-if="tracker.status.connection === 'active'" :fromTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
-    <td class="tracker_" v-if="tracker.zone && tracker.zone.label">{{ tracker.zone.label }}</td><td v-else>-</td>
-    <td class="tracker_" v-if="tracker.zone && tracker.zone.label"><time-counter-color :fromTime="tracker.zone.changed_at"></time-counter-color></td><td v-else>-</td>
-    <td class="tracker_" v-if="tracker.zone && tracker.zone.label"><span class="inzonedate">{{ showDate }}</span></td><td v-else>-</td>
+    <td class="tracker_" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span><div v-if="tracker.zone && tracker.zone.label && tracker.zone.event_type == 'outzone'">{{ tracker.zone.label }}<br>{{ showDate }}</div></td><td v-else>-</td><td class="tracker_" v-if="tracker.status"><time-counter v-if="tracker.status.connection === 'active'" :fromTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
+    <td class="tracker_" v-if="tracker.zone && tracker.zone.label && tracker.zone.event_type == 'inzone'">{{ tracker.zone.label }}</td><td v-else>-</td>
+    <td class="tracker_" v-if="tracker.zone && tracker.zone.label && tracker.zone.event_type == 'inzone'"><time-counter-color :fromTime="tracker.zone.changed_at"></time-counter-color></td><td v-else>-</td>
+    <td class="tracker_" v-if="tracker.zone && tracker.zone.label && tracker.zone.event_type == 'inzone'"><span class="inzonedate">{{ showDate }}</span></td><td v-else>-</td>
   </tr>
 </template>
 

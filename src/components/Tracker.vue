@@ -1,7 +1,7 @@
 <template>
   <tr class="tracker">
     <td class="tracker_label">{{ tracker.label }}</td>
-    <td class="tracker_" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span><div v-if="tracker.zone && tracker.zone.label && tracker.zone.event_type == 'outzone'">{{ tracker.zone.label }}<br>{{ showDate }}</div></td><td v-else>-</td><td class="tracker_" v-if="tracker.status"><time-counter v-if="tracker.status.connection === 'active'" :fromTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
+    <td class="tracker_status" v-if="tracker.status"><span v-bind:class="statusColor">{{ stat_ru }}</span><div v-if="tracker.zone && tracker.zone.label && tracker.zone.event_type == 'outzone'">Выезд из {{ tracker.zone.label }}<br>в {{ showDate }}</div></td><td v-else>-</td><td class="tracker_" v-if="tracker.status"><time-counter v-if="tracker.status.connection === 'active'" :fromTime="tracker.status.changed_at"></time-counter></td><td v-else>-</td>
     <td class="tracker_" v-if="tracker.zone && tracker.zone.label && tracker.zone.event_type == 'inzone'">{{ tracker.zone.label }}</td><td v-else>-</td>
     <td class="tracker_" v-if="tracker.zone && tracker.zone.label && tracker.zone.event_type == 'inzone'"><time-counter-color :fromTime="tracker.zone.changed_at"></time-counter-color></td><td v-else>-</td>
     <td class="tracker_" v-if="tracker.zone && tracker.zone.label && tracker.zone.event_type == 'inzone'"><span class="inzonedate">{{ showDate }}</span></td><td v-else>-</td>
@@ -73,16 +73,17 @@ export default {
     padding: 5px 10px;
   }
   .tracker {
-    color: #aaa;
-    background-color: rgba(50, 50, 50, 0.5);
+    color: black;
+    background-color: white;
   }
   .tracker_label {
-    color: #ccc;
+    color: #333;
     margin: 0;
   }
   span {
     &.offline, &.signal_lost {
       color: yellow;
+      background-color: black;
     }
     &.parked {
         color: darkred;
@@ -94,8 +95,11 @@ export default {
       color: indianred;
     }
     &.inzonedate {
-      color: aqua;
+      color: black;
     }
+  }
+  .tracker_status div {
+    font-size: 90%;
   }
 
 </style>

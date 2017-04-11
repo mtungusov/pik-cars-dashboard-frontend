@@ -163,7 +163,7 @@ export default {
     height: 100%;
   }
   body {
-    background-color: black;
+    background-color: white;
     display: block;
     margin: 0 auto;
   }
@@ -171,7 +171,7 @@ export default {
     font-family: Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
+    color: black;
     width: 940px;
     margin: 0 auto;
   }
@@ -184,13 +184,13 @@ export default {
       width: 50%;
       /*text-align: center;*/
       vertical-align: top;
-      background-color: black;
+      background-color: white;
       padding: 5px 10px 5px 0;
       
       button {
-        background-color: #333333;
+        background-color: #999;
         border: none;
-        color: white;
+        color: black;
         display: inline-block;
         font-size: 16px;
         padding: 5px 10px;
@@ -211,13 +211,13 @@ export default {
     padding: 0;
     
     li {
-      color: #aaaaaa;
+      color: black;
       margin: 5px 0;
     }
   }
   
   .selectedZones, .selectedGroups {
-    color: #cccccc;
+    color: #333;
     font-size: 12px;
     font-style: italic;
     margin: 10px 0;
@@ -228,12 +228,13 @@ export default {
     padding: 0;
     border: none;
     width: 100%;
+    background-color: #ccc;
     
     th {
-      color: white;
+      color: black;
       font-weight: bold;
       height: 3em;
-      background-color: #333;
+      background-color: #ccc;
       
       &.tracker_label {
         /*min-width: 534px;*/

@@ -44,11 +44,11 @@ const store = new Vuex.Store({
 
         var _trackers = context.state.trackers
         var _groups = _.reduce(_trackers, function (acc, item) {
-          if (item.group && item.group.id > 0)
+          if (item.group && item.group.id >= 0)
             acc.push({ 'id': item.group.id, 'title': item.group.title })
           return acc
         }, [])
-  
+
         context.commit('UPDATE_GROUPS', _.sortBy(_.uniqWith(_groups, _.isEqual), ['title']))
       })
     },

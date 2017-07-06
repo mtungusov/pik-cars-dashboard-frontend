@@ -18,8 +18,8 @@
         let _time = this.fromTime
         let timeDiff = (this.now - _time)/60
         switch (true) {
+          case (timeDiff > 120): return 'gt120'
           case (timeDiff > 60): return 'gt60'
-          case (timeDiff > 40): return 'gt40'
           default: return ''
         }
       }
@@ -46,11 +46,11 @@
   span {
     color: black;
     
-    &.gt40 {
+    &.gt60 {
       color: black;
       background-color: yellow;
     }
-    &.gt60 {
+    &.gt120 {
       color: white;
       background-color: darkred;
     }

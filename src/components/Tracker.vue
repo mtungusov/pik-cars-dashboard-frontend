@@ -44,6 +44,7 @@ export default {
         switch (_conn) {
           case 'offline': return 'выкл.'
           case 'signal_lost': return 'нет сигнала'
+          case 'blocked': return 'заблокирован'
           default: return 'не ясно'
         }
       }
